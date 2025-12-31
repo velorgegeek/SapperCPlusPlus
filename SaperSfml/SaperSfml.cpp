@@ -357,7 +357,6 @@ int main()
     sf::Clock clock;
     sf::Font MyFont;
     if(!MyFont.loadFromFile("Fonts/arial.ttf")){
-        return 0;
     }
     sf::Text text;
     CountFlagText.setFont(MyFont);
