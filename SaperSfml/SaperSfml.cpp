@@ -3,6 +3,7 @@
 #include<vector>
 #include <iostream>
 #include <random>
+#include <math.h>
 using namespace std;
 sf::Texture num[8];
 sf::Texture CellStatus[2];
@@ -11,6 +12,7 @@ sf::Texture OpenCell;
 sf::Texture QuestionCell;
 const int offsetX= 0;
 const int offsetY = 50;
+
  int sizeCell =32;
 
  sf::Text CountFlagText;
@@ -192,14 +194,20 @@ public:
             cells[x][y].countBomb = count;
         }
     }
-    void rightclick(int x, int y) {
+    void rightclick(int x, int y,int& moves,GameStatus& status) {
         if (x < 0 || x >= size.columns || y < 0 || y >= size.rows) {
             return;
         }
+        
          if (cells[x][y].open) {
             return;
          }
-
+         if (moves == 0) {
+             status = GameStatus::Play;
+             calcBomb(x, y);
+         }
+         moves++;
+         
          switch (cells[x][y].cellstatus) {
          case Cell::none:
              CountFlags--;
@@ -252,6 +260,7 @@ public:
             return;
         }
         if (moves == 0) {
+            status = GameStatus::Play;
             calcBomb(x, y);
         }
         if (cells[x][y].open || cells[x][y].cellstatus == Cell::flagged) {
@@ -285,13 +294,12 @@ public:
         return static_cast<int>(timer.asSeconds());
     }
     void rightclick(int x, int y) {
-        map.rightclick(x, y);
+        map.rightclick(x, y,moves,status);
         wincheck();
     }
     void checkpos(int x, int y) {
         map.checkPos(x, y,status, moves);
         if (status == GameStatus::Lose) {
-            timer = sf::seconds(0);
         }
         else {
             wincheck();
@@ -313,14 +321,16 @@ public:
                 e = Cell();
             }
         }
-        timer = sf::seconds(0);
-        moves = 0;
-        status = GameStatus::Play;
-        map.countCell = 0;
-        map.correctFlags = 0;
-       
         map.CountFlags = map.CountBomb;
         CountFlagText.setString(to_string(map.CountFlags));
+        timer = sf::seconds(0);
+        moves = 0;
+        map.countCell = 0;
+        map.correctFlags = 0;
+        map.CountOpenCell = 0;
+        status = GameStatus::none;
+       
+
 
     }
     void mapPrint(sf::RenderWindow& window) {
@@ -332,8 +342,9 @@ public:
         }
     }
     void updateTime(sf::Time time) {
-        timer += time;
-        float time2=  timer.asSeconds();
+        if (status == GameStatus::Play) {
+            timer += time;
+        }
     }
 };
 int main()
@@ -387,15 +398,15 @@ int main()
                 }
             }
             if (event.type == sf::Event::MouseButtonPressed) {
-                if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && game.status == GameStatus::Play) {
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && (game.status == GameStatus::Play || game.status == GameStatus::none)) {
                     sf::Vector2i localPosition = sf::Mouse::getPosition(window);
                     game.rightclick((localPosition.x - offsetX) / sizeCell, (localPosition.y - offsetY) / sizeCell);
                 }
 
-                if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && game.status == GameStatus::Play){
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (game.status == GameStatus::Play  || game.status == GameStatus::none)){
                     sf::Vector2i localPosition = sf::Mouse::getPosition(window);
                     
-                    game.checkpos((localPosition.x - offsetX) / sizeCell, (localPosition.y - offsetY)/ sizeCell);
+                    game.checkpos((localPosition.x - offsetX) / sizeCell, (abs(localPosition.y) - offsetY)/ sizeCell);
                 }
             }
         }
