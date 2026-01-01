@@ -6,28 +6,50 @@
 #include <math.h>
 using namespace std;
 sf::Texture num[8];
-sf::Texture CellStatus[2];
+sf::Texture WrongFlag;
 sf::Texture texture;
 sf::Texture OpenCell;
 sf::Texture QuestionCell;
-const int offsetX= 0;
+sf::Texture BombTexture;
+sf::Texture ActivatedBomb;
+const int offsetX = 0;
 const int offsetY = 50;
 
- int sizeCell =32;
+int sizeCell = 32;
 
- sf::Text CountFlagText;
+sf::Text CountFlagText;
 
- enum class GameStatus { Play, Win, Lose, none };
+enum class GameStatus { Play, Win, Lose, none };
+void initTexture() {
+    for (int i = 0; i < sizeof(num) / sizeof(num[0]); i++) {
+        if (!num[i].loadFromFile("Спрайты/cell" + std::to_string(i) + ".png")) {
+            std::cerr << "Failed to load texture for number " << (i) << std::endl;
+        }
+        num[i].setSmooth(false);
+    }
+    texture.loadFromFile("Спрайты/Flags.png");
+    texture.setSmooth(false);
+    OpenCell.loadFromFile("Спрайты/openCell.png");
+    OpenCell.setSmooth(false);
+    QuestionCell.loadFromFile("Спрайты/Question.png");
+    QuestionCell.setSmooth(false);
+    ActivatedBomb.loadFromFile("Спрайты/activatedBomb.png");
+    ActivatedBomb.setSmooth(false);
+    WrongFlag.loadFromFile("Спрайты/WrongFlagged.png");
+    WrongFlag.setSmooth(false);
 
+    BombTexture.loadFromFile("Спрайты/bomb.png");
+    BombTexture.setSmooth(false);
+}
 class Cell {
 public:
     short countBomb;
     bool open;
     bool bomb;
-    enum status {none,flagged,question};
+    enum status { none, flagged, question };
     status cellstatus;
-    Cell(int c, bool o, bool b) : countBomb(c), open(o), bomb(b){};
-    Cell(){
+    Cell(int c, bool o, bool b) : countBomb(c), open(o), bomb(b) {};
+    Cell() {
         countBomb = 0;
         open = false;
         bomb = false;
@@ -38,7 +60,7 @@ class NumOfCell {
 public:
     short columns;
     short rows;
-    NumOfCell(){
+    NumOfCell() {
         columns = 9;
         rows = 9;
     }
@@ -80,12 +102,23 @@ public:
                 rectangle.setFillColor(sf::Color::White);
 
                 // Если проиграли, показываем все бомбы
-                if (status == GameStatus::Lose && cells[i][j].bomb) {
-                    if (cells[i][j].open && cells[i][j].bomb) {
-                        rectangle.setFillColor(sf::Color::Red);
+                if (status == GameStatus::Lose && !cells[i][j].bomb) {
+                    if (cells[i][j].cellstatus == Cell::flagged) {
+
+                        rectangle.setTexture(&WrongFlag);
+                        window.draw(rectangle);
+                        continue;
                     }
-                    else if (!cells[i][j].open && cells[i][j].bomb) {
-                        rectangle.setFillColor(sf::Color::Black);
+                }
+                if (status == GameStatus::Lose && cells[i][j].bomb) {
+                    if (cells[i][j].open) {
+                        rectangle.setTexture(&ActivatedBomb);
+                    }
+                    else if (cells[i][j].cellstatus == Cell::flagged) {
+                        rectangle.setTexture(&texture);
+                    }
+                    else if (!cells[i][j].open ) {
+                        rectangle.setTexture(&BombTexture);
                     }
 
                 }
@@ -104,10 +137,10 @@ public:
                 }
                 else {
                     if (cells[i][j].bomb) {
-                        rectangle.setFillColor(sf::Color::Black);
+                        rectangle.setTexture(&BombTexture);
                     }
                     else if (cells[i][j].countBomb >= 0) {
-                            rectangle.setTexture(&num[cells[i][j].countBomb]);
+                        rectangle.setTexture(&num[cells[i][j].countBomb]);
                     }
                 }
                 window.draw(rectangle);
@@ -116,10 +149,10 @@ public:
     }
     GameMap() {
         resize(9, 9);
-       //map.resize(16, vector<Cell>(16));
+        //map.resize(16, vector<Cell>(16));
     }
 
-    GameMap(int n,int y) : size(n,y) {
+    GameMap(int n, int y) : size(n, y) {
         resize(n, y);
     }
     void resize(int n, int y) {
@@ -133,9 +166,9 @@ public:
         CountFlags = it->second; //выставление кол-во бомб/флагов
         cells.resize(n, vector<Cell>(y));
         countCell = it->first.columns * it->first.rows - it->second;
-        
+
     }
-    void calcBomb(int x,int y) {
+    void calcBomb(int x, int y) {
         vector<pair<int, int>> neighbour; //соседи рядом с бомбами
 
         std::random_device rd;
@@ -167,14 +200,15 @@ public:
                         }
                     }
                 }
-            }else{
+            }
+            else {
                 i--;
-           }
+            }
         }
         initCell(neighbour);
     }
     //подсчет бомб возле клетки
-    void initCell(const vector<pair<int,int>>& neighbor) {
+    void initCell(const vector<pair<int, int>>& neighbor) {
         for (int i = 0; i < neighbor.size(); i++) {
             int x = neighbor[i].first;
             int y = neighbor[i].second;
@@ -194,37 +228,37 @@ public:
             cells[x][y].countBomb = count;
         }
     }
-    void rightclick(int x, int y,int& moves,GameStatus& status) {
+    void rightclick(int x, int y, int& moves, GameStatus& status) {
         if (x < 0 || x >= size.columns || y < 0 || y >= size.rows) {
             return;
         }
-        
-         if (cells[x][y].open) {
+
+        if (cells[x][y].open) {
             return;
-         }
-         if (moves == 0) {
-             status = GameStatus::Play;
-             calcBomb(x, y);
-         }
-         moves++;
-         
-         switch (cells[x][y].cellstatus) {
-         case Cell::none:
-             CountFlags--;
-             if (cells[x][y].bomb) correctFlags++;
-             cells[x][y].cellstatus = Cell::flagged; 
-             CountFlagText.setString(to_string(CountFlags));
-             break;
-         case Cell::flagged:
-             CountFlags++;
-             if (cells[x][y].bomb) correctFlags--;
-             cells[x][y].cellstatus = Cell::question;
-             CountFlagText.setString(to_string(CountFlags));
-             break;
-         case Cell::question:
-             cells[x][y].cellstatus = Cell::none;
-             break;
-         }
+        }
+        if (moves == 0) {
+            status = GameStatus::Play;
+            calcBomb(x, y);
+        }
+        moves++;
+
+        switch (cells[x][y].cellstatus) {
+        case Cell::none:
+            CountFlags--;
+            if (cells[x][y].bomb) correctFlags++;
+            cells[x][y].cellstatus = Cell::flagged;
+            CountFlagText.setString(to_string(CountFlags));
+            break;
+        case Cell::flagged:
+            CountFlags++;
+            if (cells[x][y].bomb) correctFlags--;
+            cells[x][y].cellstatus = Cell::question;
+            CountFlagText.setString(to_string(CountFlags));
+            break;
+        case Cell::question:
+            cells[x][y].cellstatus = Cell::none;
+            break;
+        }
     }
     //открытие клетки
     void openCell(int x, int y) {
@@ -282,23 +316,23 @@ public:
 };
 class Game {
 public:
-    
+
     GameStatus status = GameStatus::none;
     GameMap map;
     int moves = 0;
     sf::Time timer;
-    Game() : map(9,9) {
+    Game() : map(9, 9) {
         status = GameStatus::Play;
     }
     int getTime() {
         return static_cast<int>(timer.asSeconds());
     }
     void rightclick(int x, int y) {
-        map.rightclick(x, y,moves,status);
+        map.rightclick(x, y, moves, status);
         wincheck();
     }
     void checkpos(int x, int y) {
-        map.checkPos(x, y,status, moves);
+        map.checkPos(x, y, status, moves);
         if (status == GameStatus::Lose) {
         }
         else {
@@ -307,10 +341,10 @@ public:
 
     }
     void resizeWindow(sf::RenderWindow& window) {
-        window.setSize(sf::Vector2u(map.size.columns * sizeCell +offsetX , map.size.rows * sizeCell +offsetY));
+        window.setSize(sf::Vector2u(map.size.columns * sizeCell + offsetX, map.size.rows * sizeCell + offsetY));
         window.setView(sf::View(sf::FloatRect(
             0, 0,
-            map.size.columns * sizeCell +offsetX,
+            map.size.columns * sizeCell + offsetX,
             map.size.rows * sizeCell + offsetY
         )));
 
@@ -329,7 +363,7 @@ public:
         map.correctFlags = 0;
         map.CountOpenCell = 0;
         status = GameStatus::none;
-       
+
 
 
     }
@@ -351,23 +385,12 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(288, 288), L"Сапер работает ахуеть");
     Game game;
-    for (int i = 0; i < sizeof(num)/sizeof(num[0]); i++) {
-        if (!num[i].loadFromFile("Спрайты/cell" + std::to_string(i) + ".png")) {
-            std::cerr << "Failed to load texture for number " << (i) << std::endl;
-        }
-        num[i].setSmooth(false);
-    }
-    texture.loadFromFile("Спрайты/Flags.png");
-    texture.setSmooth(false);
-    OpenCell.loadFromFile("Спрайты/openCell.png");
-    OpenCell.setSmooth(false);
-    QuestionCell.loadFromFile("Спрайты/Question.png");
-    QuestionCell.setSmooth(false);
+    initTexture();
     game.resizeWindow(window);
 
     sf::Clock clock;
     sf::Font MyFont;
-    if(!MyFont.loadFromFile("Fonts/arial.ttf")){
+    if (!MyFont.loadFromFile("Fonts/arial.ttf")) {
     }
     sf::Text text;
     CountFlagText.setFont(MyFont);
@@ -403,10 +426,10 @@ int main()
                     game.rightclick((localPosition.x - offsetX) / sizeCell, (localPosition.y - offsetY) / sizeCell);
                 }
 
-                if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (game.status == GameStatus::Play  || game.status == GameStatus::none)){
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (game.status == GameStatus::Play || game.status == GameStatus::none)) {
                     sf::Vector2i localPosition = sf::Mouse::getPosition(window);
-                    
-                    game.checkpos((localPosition.x - offsetX) / sizeCell, (abs(localPosition.y) - offsetY)/ sizeCell);
+
+                    game.checkpos((localPosition.x - offsetX) / sizeCell, (abs(localPosition.y) - offsetY) / sizeCell);
                 }
             }
         }
