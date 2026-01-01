@@ -12,6 +12,7 @@ sf::Texture OpenCell;
 sf::Texture QuestionCell;
 sf::Texture BombTexture;
 sf::Texture ActivatedBomb;
+sf::Font MyFont;
 const int offsetX = 0;
 const int offsetY = 50;
 
@@ -43,6 +44,105 @@ void initTexture() {
     BombTexture.loadFromFile("Спрайты/bomb.png");
     BombTexture.setSmooth(false);
 }
+
+class ModelWindow {
+public:
+    sf::RectangleShape background;
+    sf::Text text;
+    sf::Text newGameText;
+    sf::Font font;
+    bool isVisible = 0;
+    void show() { isVisible = 1; }
+    void hide() { isVisible = 0; }
+    ModelWindow() {};
+
+    ModelWindow(float posX,float posY,sf::Color color, string text, sf::Font textfont) {
+        this->text.setString(text);
+        font = textfont;
+        newGameText.setCharacterSize(26);
+        newGameText.setFont(textfont);
+        newGameText.setString(L"Нажмите R для перезапуска");
+        this->text.setFont(font);
+        this->text.setCharacterSize(36);
+        background.setSize(sf::Vector2f(posX, posY));
+        background.setFillColor(color);
+        background.setPosition(0, 0);
+        centerText();
+    }
+    ModelWindow(float posX, float posY, sf::Color color, const wchar_t text[], sf::Font textfont,sf::Color textColor) {
+        this->text.setString(text);
+        font = textfont;
+        this->text.setFont(font);
+        this->text.setCharacterSize(36);
+        newGameText.setCharacterSize(18);
+        newGameText.setFont(font);
+        newGameText.setString(L"Нажмите R для перезапуска");
+        
+        background.setSize(sf::Vector2f(posX, posY));
+        background.setFillColor(color);
+        background.setPosition(0, 0);
+        this->text.setFillColor(textColor);
+        this->text.setOutlineColor(sf::Color::Black);
+        this->text.setOutlineThickness(1);
+        centerText();
+        newGameText.setPosition(this->text.getPosition().x, this->text.getPosition().y + this->text.getCharacterSize()+10);
+
+
+    }
+
+    void init(float posX, float posY, sf::Color color, const wchar_t text[], sf::Font textfont, sf::Color textColor) {
+        this->text.setString(text);
+        font = textfont;
+        this->text.setFont(font);
+        this->text.setCharacterSize(36);
+        newGameText.setCharacterSize(18);
+        newGameText.setFont(font);
+        newGameText.setString(L"Нажмите R для перезапуска");
+
+        background.setSize(sf::Vector2f(posX, posY));
+        background.setFillColor(color);
+        background.setPosition(0, 0);
+        this->text.setFillColor(textColor);
+        this->text.setOutlineColor(sf::Color::Black);
+        this->text.setOutlineThickness(1);
+        centerText();
+        newGameText.setPosition(this->text.getPosition().x, this->text.getPosition().y + this->text.getCharacterSize() + 10);
+        newGameText.setOutlineColor(sf::Color::Black);
+        newGameText.setOutlineThickness(1);
+    }
+
+    void resize(sf::RenderWindow& window) {
+        background.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+        centerText();
+        newGameText.setPosition(this->text.getPosition().x, this->text.getPosition().y + this->text.getCharacterSize() + 10);
+    }
+    void centerText() {
+        sf::FloatRect textBounds = text.getLocalBounds();
+        sf::FloatRect bgBounds = background.getGlobalBounds();
+
+        text.setPosition(
+            bgBounds.left + bgBounds.width / 2 - textBounds.width / 2,
+            bgBounds.top + bgBounds.height / 2 - textBounds.height / 2 - 10
+        );
+        newGameText.setPosition(bgBounds.left + bgBounds.width / 2 - textBounds.width / 2,
+            bgBounds.top + bgBounds.height / 2 - textBounds.height / 2 +40);
+    }
+    void draw(sf::RenderWindow& window) {
+        if (!isVisible) return;
+        sf::Vector2u windowSize = window.getSize();
+        // Устанавливаем позицию фона по центру
+        background.setPosition(windowSize.x / 2 - background.getSize().x / 2, windowSize.y / 2 - background.getSize().y / 2);
+        // Обновляем позицию текста (центрируем относительно фона)
+        centerText();
+        window.draw(background);
+        window.draw(text);
+        window.draw(newGameText);
+    }
+    
+};
+ModelWindow WinWindow;
+ModelWindow LoseWindow;
+
 class Cell {
 public:
     short countBomb;
@@ -382,6 +482,7 @@ public:
     void checkpos(int x, int y) {
         map.checkPos(x, y, status, moves);
         if (status == GameStatus::Lose) {
+            LoseWindow.show();
         }
         else {
             wincheck();
@@ -407,7 +508,6 @@ public:
         CountFlagText.setString(to_string(map.CountFlags));
         timer = sf::seconds(0);
         moves = 0;
-        map.countCell = 0;
         map.correctFlags = 0;
         map.CountOpenCell = 0;
         status = GameStatus::none;
@@ -426,6 +526,7 @@ public:
     void wincheck() {
         if (map.correctFlags == map.CountBomb && map.countCell == map.CountOpenCell) {
             status = GameStatus::Win;
+            WinWindow.show();
         }
     }
     void updateTime(sf::Time time) {
@@ -438,11 +539,12 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(288, 288), L"Сапер работает ахуеть");
     Game game;
+
     initTexture();
     game.resizeWindow(window);
 
     sf::Clock clock;
-    sf::Font MyFont;
+
     if (!MyFont.loadFromFile("Fonts/arial.ttf")) {
     }
     sf::Text text;
@@ -455,10 +557,11 @@ int main()
     text.setFont(MyFont);
     text.setCharacterSize(36);
     text.setFillColor(sf::Color::Red);
-    text.setPosition(255, 0);
-    sf::RectangleShape rec(sf::Vector2f(window.getSize().x, window.getSize().y - offsetY));
-    rec.setFillColor(sf::Color(0, 0, 0, 100));
-    rec.setPosition(0,offsetY);
+    text.setPosition(window.getSize().x-30, 0);
+    WinWindow.init(window.getSize().x, window.getSize().y
+        , sf::Color(100, 100, 100, 100), L"Вы победили!", MyFont, sf::Color::Green);
+    LoseWindow.init(window.getSize().x, window.getSize().y,
+        sf::Color(100, 100, 100, 100), L"Вы проиграли!", MyFont, sf::Color::Red);
     while (window.isOpen())
     {
         sf::Time time = clock.getElapsedTime();
@@ -494,6 +597,8 @@ int main()
             if (event.type == sf::Event::KeyPressed) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
                     game.newgame();
+                    LoseWindow.hide();
+                    WinWindow.hide();
                 }
             }
             if (event.type == sf::Event::MouseButtonPressed) {
@@ -514,25 +619,9 @@ int main()
         game.mapPrint(window);
         window.draw(text);
         window.draw(CountFlagText);
-        window.draw(rec);
+        WinWindow.draw(window);
+        LoseWindow.draw(window);
         window.display();
-        if (game.status == GameStatus::Win) {
-            sf::RenderWindow windows(sf::VideoMode(144, 144), L"Вы победил");
-            while (windows.isOpen())
-            {
-                sf::Event event;
-                while (windows.pollEvent(event))
-                {
-                    if (event.type == sf::Event::Closed) {
-                        windows.close();
-                        game.status = GameStatus::none;
-                    }
-
-                }
-                windows.display();
-            }
-        }
-        
     }
     return 0;
 }
