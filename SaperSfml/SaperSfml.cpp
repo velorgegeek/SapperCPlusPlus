@@ -21,21 +21,23 @@ sf::Text CountFlagText;
 
 enum class GameStatus { Play, Win, Lose, none };
 void initTexture() {
+
     for (int i = 0; i < sizeof(num) / sizeof(num[0]); i++) {
+        //спрайты для ячеек рядом с бомбами
         if (!num[i].loadFromFile("Спрайты/cell" + std::to_string(i) + ".png")) {
             std::cerr << "Failed to load texture for number " << (i) << std::endl;
         }
         num[i].setSmooth(false);
     }
-    texture.loadFromFile("Спрайты/Flags.png");
+    texture.loadFromFile("Спрайты/Flags.png"); //спрайт флага
     texture.setSmooth(false);
-    OpenCell.loadFromFile("Спрайты/openCell.png");
+    OpenCell.loadFromFile("Спрайты/openCell.png");// просто открытой ячейки
     OpenCell.setSmooth(false);
-    QuestionCell.loadFromFile("Спрайты/Question.png");
+    QuestionCell.loadFromFile("Спрайты/Question.png");//спрайт вопроса
     QuestionCell.setSmooth(false);
     ActivatedBomb.loadFromFile("Спрайты/activatedBomb.png");
     ActivatedBomb.setSmooth(false);
-    WrongFlag.loadFromFile("Спрайты/WrongFlagged.png");
+    WrongFlag.loadFromFile("Спрайты/WrongFlagged.png"); // неправильного флага
     WrongFlag.setSmooth(false);
 
     BombTexture.loadFromFile("Спрайты/bomb.png");
@@ -101,7 +103,7 @@ public:
                 rectangle.setTexture(nullptr);
                 rectangle.setFillColor(sf::Color::White);
 
-                // Если проиграли, показываем все бомбы
+                // Если проиграли и бомбы нет,но есть флаг
                 if (status == GameStatus::Lose && !cells[i][j].bomb) {
                     if (cells[i][j].cellstatus == Cell::flagged) {
 
@@ -110,28 +112,29 @@ public:
                         continue;
                     }
                 }
+                //если проиграли и бомба есть
                 if (status == GameStatus::Lose && cells[i][j].bomb) {
                     if (cells[i][j].open) {
-                        rectangle.setTexture(&ActivatedBomb);
+                        rectangle.setTexture(&ActivatedBomb); // то на какой подорвались
                     }
                     else if (cells[i][j].cellstatus == Cell::flagged) {
-                        rectangle.setTexture(&texture);
+                        rectangle.setTexture(&texture); //правильный флаг т.е. на бомбе
                     }
-                    else if (!cells[i][j].open ) {
-                        rectangle.setTexture(&BombTexture);
+                    else if (!cells[i][j].open) {
+                        rectangle.setTexture(&BombTexture);// бомба
                     }
 
                 }
                 else if (!cells[i][j].open) {
                     switch (cells[i][j].cellstatus) {
                     case Cell::status::none:
-                        rectangle.setTexture(&OpenCell);
+                        rectangle.setTexture(&OpenCell);// просто открытая ячейка
                         break;
                     case Cell::status::flagged:
-                        rectangle.setTexture(&texture);
+                        rectangle.setTexture(&texture); //флаг
                         break;
                     case Cell::status::question:
-                        rectangle.setTexture(&QuestionCell);
+                        rectangle.setTexture(&QuestionCell);//вопрос
                         break;
                     }
                 }
@@ -168,6 +171,7 @@ public:
         countCell = it->first.columns * it->first.rows - it->second;
 
     }
+    //инициилизация бомб
     void calcBomb(int x, int y) {
         vector<pair<int, int>> neighbour; //соседи рядом с бомбами
 
@@ -177,9 +181,10 @@ public:
         auto it = find_if(difficulty.begin(), difficulty.end(),
             [this](const pair<NumOfCell, short>& p) {
                 return p.first.columns == size.columns && p.first.rows == size.rows;
-            });
+            });//получение кол-во бомб
+
         std::uniform_int_distribution<int> distX(0, size.columns - 1);
-        std::uniform_int_distribution<int> distY(0, size.rows - 1);
+        std::uniform_int_distribution<int> distY(0, size.rows - 1);//ограничение по рандому
         CountBomb = it->second;
         for (int i = 0; i < it->second; i++) {
             int x1 = distX(rnd);
@@ -207,7 +212,7 @@ public:
         }
         initCell(neighbour);
     }
-    //подсчет бомб возле клетки
+    //подсчет кол-во бомб возле клетки
     void initCell(const vector<pair<int, int>>& neighbor) {
         for (int i = 0; i < neighbor.size(); i++) {
             int x = neighbor[i].first;
@@ -236,11 +241,6 @@ public:
         if (cells[x][y].open) {
             return;
         }
-        if (moves == 0) {
-            status = GameStatus::Play;
-            calcBomb(x, y);
-        }
-        moves++;
 
         switch (cells[x][y].cellstatus) {
         case Cell::none:
@@ -260,7 +260,7 @@ public:
             break;
         }
     }
-    //открытие клетки
+    //рекурсивное открытие клетки
     void openCell(int x, int y) {
         vector <pair<short, short>> coordinat;
         coordinat.push_back(make_pair(x, y));
@@ -429,7 +429,7 @@ int main()
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (game.status == GameStatus::Play || game.status == GameStatus::none)) {
                     sf::Vector2i localPosition = sf::Mouse::getPosition(window);
 
-                    game.checkpos((localPosition.x - offsetX) / sizeCell, (abs(localPosition.y) - offsetY) / sizeCell);
+                    game.checkpos((localPosition.x - offsetX) / sizeCell, (localPosition.y - offsetY) / sizeCell);
                 }
             }
         }
