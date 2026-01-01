@@ -90,6 +90,52 @@ public:
     int countCell;
     int CountBomb;
 
+    void mapPrintDebug(sf::RenderWindow& window, GameStatus status) {
+        sf::RectangleShape rectangle(sf::Vector2f(sizeCell, sizeCell));
+        rectangle.setOutlineThickness(1);
+        rectangle.setOutlineColor(sf::Color::Black);
+
+        for (int i = 0; i < size.columns; i++) {
+            for (int j = 0; j < size.rows; j++) {
+                float x = std::round(i * sizeCell + offsetX);
+                float y = std::round(j * sizeCell + offsetY);
+                rectangle.setPosition(x, y);
+                rectangle.setTexture(nullptr);
+                rectangle.setFillColor(sf::Color::White); 
+                if (cells[i][j].bomb) {
+                    if (cells[i][j].cellstatus == Cell::status::flagged) {
+                        rectangle.setTexture(&texture);
+                    }
+                    else {
+                        rectangle.setFillColor(sf::Color::Yellow);
+                    }
+
+                }
+                else if (!cells[i][j].open) {
+                    switch (cells[i][j].cellstatus) {
+                    case Cell::status::none:
+                        rectangle.setTexture(&OpenCell);// просто открытая ячейка
+                        break;
+                    case Cell::status::flagged:
+                        rectangle.setTexture(&texture); //флаг
+                        break;
+                    case Cell::status::question:
+                        rectangle.setTexture(&QuestionCell);//вопрос
+                        break;
+                    }
+                }
+                else {
+                    if (cells[i][j].bomb) {
+                        rectangle.setTexture(&BombTexture);
+                    }
+                    else if (cells[i][j].countBomb >= 0) {
+                        rectangle.setTexture(&num[cells[i][j].countBomb]);
+                    }
+                }
+                window.draw(rectangle);
+            }
+        }
+    }
     void mapPrint(sf::RenderWindow& window, GameStatus status) {
         sf::RectangleShape rectangle(sf::Vector2f(sizeCell, sizeCell));
         rectangle.setOutlineThickness(1);
@@ -102,7 +148,6 @@ public:
                 rectangle.setPosition(x, y);
                 rectangle.setTexture(nullptr);
                 rectangle.setFillColor(sf::Color::White);
-
                 // Если проиграли и бомбы нет,но есть флаг
                 if (status == GameStatus::Lose && !cells[i][j].bomb) {
                     if (cells[i][j].cellstatus == Cell::flagged) {
@@ -161,10 +206,7 @@ public:
     void resize(int n, int y) {
         size.columns = n;
         size.rows = y;
-        auto it = find_if(difficulty.begin(), difficulty.end(),
-            [this](const pair<NumOfCell, short>& p) {
-                return p.first.columns == size.columns && p.first.rows == size.rows;
-            }); //получение размера,сложности
+        auto it = getDifficulty(); //получение размера,сложности
 
         CountFlags = it->second; //выставление кол-во бомб/флагов
         cells.resize(n, vector<Cell>(y));
@@ -178,10 +220,7 @@ public:
         std::random_device rd;
         std::mt19937 rnd(rd());
 
-        auto it = find_if(difficulty.begin(), difficulty.end(),
-            [this](const pair<NumOfCell, short>& p) {
-                return p.first.columns == size.columns && p.first.rows == size.rows;
-            });//получение кол-во бомб
+        auto it = getDifficulty();
 
         std::uniform_int_distribution<int> distX(0, size.columns - 1);
         std::uniform_int_distribution<int> distY(0, size.rows - 1);//ограничение по рандому
@@ -190,7 +229,7 @@ public:
             int x1 = distX(rnd);
             int y1 = distY(rnd);// генерация бомб
 
-            if (x1 != x && y1 != y && !cells[x1][y1].bomb) {
+            if ((x1 != x || y1 != y) && !cells[x1][y1].bomb) {
                 cells[x1][y1].bomb = 1;
 
                 for (int di = -1; di <= 1; di++) {
@@ -233,7 +272,7 @@ public:
             cells[x][y].countBomb = count;
         }
     }
-    void rightclick(int x, int y, int& moves, GameStatus& status) {
+    void rightСlick(int x, int y, int& moves, GameStatus& status) {
         if (x < 0 || x >= size.columns || y < 0 || y >= size.rows) {
             return;
         }
@@ -313,12 +352,21 @@ public:
 
 
     }
+    const pair<NumOfCell, short>* getDifficulty() const {
+        auto it = find_if(difficulty.begin(), difficulty.end(),
+            [this](const pair<NumOfCell, short>& p) {
+                return p.first.columns == size.columns && p.first.rows == size.rows;
+            });
+        return it != difficulty.end() ? &(*it) : nullptr;
+    }
+    
 };
 class Game {
 public:
 
     GameStatus status = GameStatus::none;
     GameMap map;
+    bool debug = 1;
     int moves = 0;
     sf::Time timer;
     Game() : map(9, 9) {
@@ -328,7 +376,7 @@ public:
         return static_cast<int>(timer.asSeconds());
     }
     void rightclick(int x, int y) {
-        map.rightclick(x, y, moves, status);
+        map.rightСlick(x, y, moves, status);
         wincheck();
     }
     void checkpos(int x, int y) {
@@ -368,7 +416,12 @@ public:
 
     }
     void mapPrint(sf::RenderWindow& window) {
-        map.mapPrint(window, status);
+        if (debug) {
+            map.mapPrintDebug(window, status);
+        }
+        else {
+            map.mapPrint(window, status);
+        }
     }
     void wincheck() {
         if (map.correctFlags == map.CountBomb && map.countCell == map.CountOpenCell) {
@@ -403,7 +456,9 @@ int main()
     text.setCharacterSize(36);
     text.setFillColor(sf::Color::Red);
     text.setPosition(255, 0);
-
+    sf::RectangleShape rec(sf::Vector2f(window.getSize().x, window.getSize().y - offsetY));
+    rec.setFillColor(sf::Color(0, 0, 0, 100));
+    rec.setPosition(0,offsetY);
     while (window.isOpen())
     {
         sf::Time time = clock.getElapsedTime();
@@ -415,21 +470,41 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            if (event.type == sf::Event::Resized) {
+                float windowRatio = (float)event.size.width / event.size.height;
+                float viewWidth = game.map.size.columns * sizeCell;
+                float viewHeight = game.map.size.rows * sizeCell + offsetY;
+                float viewRatio = viewWidth / viewHeight;
+
+                sf::FloatRect viewport(0, 0, 1, 1);
+
+                if (windowRatio > viewRatio) {
+                    viewport.width = viewRatio / windowRatio;
+                    viewport.left = (1 - viewport.width) / 2;
+                }
+                else {
+                    viewport.height = windowRatio / viewRatio;
+                    viewport.top = (1 - viewport.height) / 2;
+                }
+
+                sf::View view(sf::FloatRect(0, 0, viewWidth, viewHeight));
+                view.setViewport(viewport);
+                window.setView(view);
+            }
             if (event.type == sf::Event::KeyPressed) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
                     game.newgame();
                 }
             }
             if (event.type == sf::Event::MouseButtonPressed) {
+                sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+                sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && (game.status == GameStatus::Play || game.status == GameStatus::none)) {
-                    sf::Vector2i localPosition = sf::Mouse::getPosition(window);
-                    game.rightclick((localPosition.x - offsetX) / sizeCell, (localPosition.y - offsetY) / sizeCell);
+                    game.rightclick((int)(worldPos.x - offsetX) / sizeCell, (int)(worldPos.y - offsetY) / sizeCell);
                 }
 
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (game.status == GameStatus::Play || game.status == GameStatus::none)) {
-                    sf::Vector2i localPosition = sf::Mouse::getPosition(window);
-
-                    game.checkpos((localPosition.x - offsetX) / sizeCell, (localPosition.y - offsetY) / sizeCell);
+                    game.checkpos((int)(worldPos.x - offsetX) / sizeCell, (int)(worldPos.y - offsetY) / sizeCell);
                 }
             }
         }
@@ -439,21 +514,25 @@ int main()
         game.mapPrint(window);
         window.draw(text);
         window.draw(CountFlagText);
+        window.draw(rec);
         window.display();
         if (game.status == GameStatus::Win) {
             sf::RenderWindow windows(sf::VideoMode(144, 144), L"Вы победил");
-            while (window.isOpen())
+            while (windows.isOpen())
             {
                 sf::Event event;
                 while (windows.pollEvent(event))
                 {
-                    if (event.type == sf::Event::Closed)
-                        window.close();
+                    if (event.type == sf::Event::Closed) {
+                        windows.close();
+                        game.status = GameStatus::none;
+                    }
+
                 }
                 windows.display();
             }
         }
+        
     }
-
     return 0;
 }
