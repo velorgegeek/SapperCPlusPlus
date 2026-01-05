@@ -509,7 +509,7 @@ public:
         }
     }
     void wincheck() {
-        if (map.correctFlags == map.CountBomb || map.countCell == map.CountOpenCell) {
+        if ((map.correctFlags == map.CountBomb && map.CountFlags ==0) || map.countCell == map.CountOpenCell) {
             status = GameStatus::Win;
             WinWindow.show();
             if (!debug) {
@@ -587,7 +587,7 @@ public:
         sf::Time time;
 
         window.setVerticalSyncEnabled(true);
-
+        bool ShowWindow = true;
         menuBar->onMenuItemClick([&game,&window](const tgui::String& item) {
             if (item == L"Статистика") {
                 window.setActive(false);
@@ -693,21 +693,24 @@ public:
                 CountFlagText.setPosition(0, offsetY - 50);
 
                 text.setPosition(window.getSize().x - 30, offsetY - 50);
+                ShowWindow = true;
             }
             else if (event.type == sf::Event::KeyPressed) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)) {
+                    ShowWindow = true;
                     game.debug = !game.debug;
 
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+                    ShowWindow = true;
                     game.newgame();
                     LoseWindow.hide();
                     WinWindow.hide();
                 }
             }
             else if (event.type == sf::Event::MouseButtonPressed) {
-                auto focusedWidget = gui.getFocusedChild();
-                menuBar;
+                ShowWindow = true;
+                auto focusedWidget = gui.getFocusedChild();;
                 if (focusedWidget && focusedWidget->getWidgetType() == "MenuBarMenuPlaceholder") {
                     continue;
                 }
@@ -723,15 +726,17 @@ public:
             }
         }
 
-
-        window.clear(sf::Color::White);
-        game.mapPrint(window);
-        window.draw(text);
-        window.draw(CountFlagText);
-        WinWindow.draw(window);
-        LoseWindow.draw(window);
-        gui.draw();
-        window.display();
+        if (ShowWindow) {
+            window.clear(sf::Color::White);
+            game.mapPrint(window);
+            window.draw(text);
+            window.draw(CountFlagText);
+            WinWindow.draw(window);
+            LoseWindow.draw(window);
+            gui.draw();
+            window.display();
+            ShowWindow = false;
+        }
         sf::sleep(sf::milliseconds(16));
     }
     return 0;

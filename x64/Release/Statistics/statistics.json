@@ -1,0 +1,197 @@
+{
+  "TotalStat": {
+    "Loss": 14,
+    "Win": 3,
+    "Winrate": 0.18000000715255737,
+    "totalGames": 17
+  },
+  "games": [
+    {
+      "DateTimeGame": 1767603463,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 19.871021270751953,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603508,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 22.004253387451172,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603515,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 5.784834861755371,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603540,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 24.340923309326172,
+      "result": "WIN"
+    },
+    {
+      "DateTimeGame": 1767603556,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 14.605244636535645,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603571,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 13.981661796569824,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603582,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 9.720115661621094,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603603,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 20.638887405395508,
+      "result": "WIN"
+    },
+    {
+      "DateTimeGame": 1767603614,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 10.01583194732666,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603616,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 1.9050439596176147,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603639,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 7.579325199127197,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603685,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 28.956523895263672,
+      "result": "WIN"
+    },
+    {
+      "DateTimeGame": 1767603886,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 10.375794410705566,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603895,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 8.12338638305664,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603947,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 51.52582550048828,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767603986,
+      "Difficulty": {
+        "bomb": 40,
+        "columns": 16,
+        "name": "Любитель",
+        "rows": 16
+      },
+      "DurationGame": 20.423717498779297,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767604393,
+      "Difficulty": {
+        "bomb": 40,
+        "columns": 16,
+        "name": "Любитель",
+        "rows": 16
+      },
+      "DurationGame": 406.3182678222656,
+      "result": "LOSS"
+    }
+  ]
+}
