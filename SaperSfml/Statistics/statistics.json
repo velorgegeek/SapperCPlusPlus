@@ -1,9 +1,43 @@
 {
   "TotalStat": {
-    "Loss": 0,
-    "Win": 0,
-    "Winrate": 0.0,
-    "totalGames": 0
+    "Loss": 2,
+    "Win": 1,
+    "Winrate": 0.33000001311302185,
+    "totalGames": 3
   },
-  "games": []
+  "games": [
+    {
+      "DateTimeGame": 1767620133,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 6.834175109863281,
+      "result": "LOSS"
+    },
+    {
+      "DateTimeGame": 1767620188,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 31.01312828063965,
+      "result": "WIN"
+    },
+    {
+      "DateTimeGame": 1767620326,
+      "Difficulty": {
+        "bomb": 10,
+        "columns": 9,
+        "name": "Начинающий",
+        "rows": 9
+      },
+      "DurationGame": 70.84154510498047,
+      "result": "LOSS"
+    }
+  ]
 }

@@ -307,8 +307,6 @@ public:
             CountFlags--;
             if (cells[x][y].bomb) correctFlags++;
             cells[x][y].cellstatus = Cell::flagged;
-            cerr << "нажатый флаг:";
-            cerr << endl << x << " " << y;
             CountFlagText.setString(to_string(CountFlags));
             break;
         case Cell::flagged:
