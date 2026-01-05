@@ -37,7 +37,7 @@ void initTexture() {
     for (int i = 0; i < sizeof(num) / sizeof(num[0]); i++) {
         //спрайты для ячеек рядом с бомбами
         if (!num[i].loadFromFile("Sprite/cell" + std::to_string(i) + ".png")) {
-            std::cerr << "Failed to load texture for number " << (i) << std::endl;
+           // std::cerr << "Failed to load texture for number " << (i) << std::endl;
         }
         num[i].setSmooth(false);
     }
