@@ -1,0 +1,69 @@
+﻿  SaperSfml.cpp
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(97,61): warning C4244: аргумент: преобразование "int" в "T", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(97,61): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(97,61): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(97,61): warning C4244:             T=float
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(97,61): warning C4244:         ]
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(97,51): warning C4244: аргумент: преобразование "int" в "T", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(97,51): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(97,51): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(97,51): warning C4244:             T=float
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(97,51): warning C4244:         ]
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(103,25): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(104,25): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(143,61): warning C4244: аргумент: преобразование "int" в "T", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(143,61): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(143,61): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(143,61): warning C4244:             T=float
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(143,61): warning C4244:         ]
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(143,51): warning C4244: аргумент: преобразование "int" в "T", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(143,51): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(143,51): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(143,51): warning C4244:             T=float
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(143,51): warning C4244:         ]
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(149,25): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(150,25): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(430,20): warning C4553: "==": результат выражения не используется; вы хотели использовать "="?
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(461,38): warning C4244: аргумент: преобразование "int" в "T", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(461,38): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(461,38): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(461,38): warning C4244:             T=float
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(461,38): warning C4244:         ]
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(460,41): warning C4244: аргумент: преобразование "int" в "T", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(460,41): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(460,41): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(460,41): warning C4244:             T=float
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(460,41): warning C4244:         ]
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(553,44): warning C4244: аргумент: преобразование "T" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(553,44): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(553,44): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(553,44): warning C4244:             T=unsigned int
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(553,44): warning C4244:         ]
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(554,60): warning C4244: аргумент: преобразование "T" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(554,60): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(554,60): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(554,60): warning C4244:             T=unsigned int
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(554,60): warning C4244:         ]
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(554,40): warning C4244: аргумент: преобразование "T" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(554,40): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(554,40): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(554,40): warning C4244:             T=unsigned int
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(554,40): warning C4244:         ]
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(556,61): warning C4244: аргумент: преобразование "T" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(556,61): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(556,61): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(556,61): warning C4244:             T=unsigned int
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(556,61): warning C4244:         ]
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(556,41): warning C4244: аргумент: преобразование "T" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(556,41): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(556,41): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(556,41): warning C4244:             T=unsigned int
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(556,41): warning C4244:         ]
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(656,33): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(657,34): warning C4244: инициализация: преобразование "int" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(676,53): warning C4244: аргумент: преобразование "T" в "float", возможна потеря данных
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(676,53): warning C4244:         with
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(676,53): warning C4244:         [
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(676,53): warning C4244:             T=unsigned int
+C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\SaperSfml\SaperSfml.cpp(676,53): warning C4244:         ]
+  SaperSfml.vcxproj -> C:\Users\BEBERISHKA\Documents\GitHub\SapperCPlusPlus\x64\Debug\SaperSfml.exe
