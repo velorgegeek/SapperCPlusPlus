@@ -136,6 +136,7 @@
     <ClCompile Include="ModalWindow.cpp" />
     <ClCompile Include="SaperSfml.cpp" />
     <ClCompile Include="Statistics.cpp" />
+    <ClCompile Include="UserDifficultyWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="openal32.dll" />
@@ -155,6 +156,7 @@
     <ClInclude Include="MapSize.h" />
     <ClInclude Include="ModalWindow.h" />
     <ClInclude Include="Statistics.h" />
+    <ClInclude Include="UserDifficultyWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

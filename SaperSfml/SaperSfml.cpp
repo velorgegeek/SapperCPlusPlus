@@ -10,12 +10,13 @@
 #include <TGUI/TGUI.hpp>
 #include <TGUI/AllWidgets.hpp>
 #include "Statistics.h"
+#include "UserDifficultyWindow.h"
 
 using namespace std;
 
 Statistics s;
 
-sf::Texture num[8];
+sf::Texture num[9];
 sf::Texture WrongFlag;
 sf::Texture texture;
 sf::Texture OpenCell;
@@ -202,6 +203,9 @@ public:
         resize(9, 9);
         //map.resize(16, vector<Cell>(16));
     }
+    GameMap(const Difficulty& diff) {
+        resize(diff);
+    }
 
     GameMap(int n, int y) : size(n, y) {
         resize(n, y);
@@ -214,7 +218,7 @@ public:
         CountFlags = it->countBomb; //выставление кол-во бомб/флагов
         cells.resize(n, vector<Cell>(y));
         countCell = it->size.columns * it->size.rows - it->countBomb;
-
+        
     }
     void resize(const Difficulty& diff) {
         size.columns = diff.size.columns;
@@ -239,11 +243,10 @@ public:
         std::random_device rd;
         std::mt19937 rnd(rd());
 
-        auto it = getDifficulty();
 
         std::uniform_int_distribution<int> distX(0, size.columns - 1);
         std::uniform_int_distribution<int> distY(0, size.rows - 1);//ограничение по рандому
-        CountBomb = it->countBomb;
+
         for (int i = 0; i < CountBomb; i++) {
             int x1 = distX(rnd);
             int y1 = distY(rnd);// генерация бомб
@@ -436,8 +439,8 @@ public:
     bool debug = 0;
     int moves = 0;
     sf::Time timer;
-    Game() : map(9, 9) {
-        diffStatus == Difficulty::Beginner;
+    Game() : dif(vectorDifficulty[0]),map(dif) {
+        diffStatus = Difficulty::Beginner;
         status = GameStatus::Play;
         dif= vectorDifficulty[0];
     }
@@ -464,12 +467,26 @@ public:
 
     }
     void resizeWindow(sf::RenderWindow& window) {
-        window.setSize(sf::Vector2u(map.size.columns * sizeCell + offsetX, map.size.rows * sizeCell + offsetY));
+        sf::Vector2u i(map.size.columns * sizeCell + offsetX, map.size.rows * sizeCell + offsetY);
+        if (i.x >= 1920 || i.y >= 1080) {
+            sf::Vector2u(1920, 1080);
+
+            window.setSize(sf::Vector2u(1920, 1080));
+            window.setView(sf::View(sf::FloatRect(
+                0, 0,
+                1920,
+                1080
+            )));
+            sizeCell = 64;
+        }
+        else {
+        window.setSize(i);
         window.setView(sf::View(sf::FloatRect(
             0, 0,
             map.size.columns * sizeCell + offsetX,
             map.size.rows * sizeCell + offsetY
         )));
+        }
 
     }
     void setstats() {
@@ -524,7 +541,7 @@ public:
     void changeDifficulty(const Difficulty& dif) {
 
         map.resize(dif);
-
+        map.CountBomb = dif.countBomb;
         newgame();
         setModalWindowToDefault();
 
@@ -580,9 +597,9 @@ public:
         menuBar->addMenu(L"Уровень игры");
         menuBar->addMenuItem(L"Уровень игры", L"Новичок");
         menuBar->addMenuItem(L"Уровень игры", L"Опытный");
-        menuBar->addMenuItem(L"Уровень игры", L"Сапер");
 
-        sf::Time time;
+        menuBar->addMenuItem(L"Уровень игры", L"Сапер");
+        menuBar->addMenuItem(L"Уровень игры", L"Пользовательский");
 
         window.setVerticalSyncEnabled(true);
         bool ShowWindow = true;
@@ -647,6 +664,14 @@ public:
                 game.resizeWindow(window);
                 game.resizeModalWindow(window);
             }
+            else if (item == L"Пользовательский") {
+                auto userDiff = UserDiffWindow::UserDiffReturn();
+                Difficulty diff(NumOfCell(userDiff[0], userDiff[1]), userDiff[2], u8"Пользовательская сложность");
+                game.changeDifficulty(diff);
+                game.dif = diff;
+                game.resizeWindow(window);
+                game.resizeModalWindow(window);
+            }
             });
 
         gui.add(menuBar);
@@ -691,23 +716,23 @@ public:
                 CountFlagText.setPosition(0, offsetY - 50);
 
                 text.setPosition(window.getSize().x - 30, offsetY - 50);
-                ShowWindow = true;
+
             }
             else if (event.type == sf::Event::KeyPressed) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)) {
-                    ShowWindow = true;
+
                     game.debug = !game.debug;
 
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-                    ShowWindow = true;
+
                     game.newgame();
                     LoseWindow.hide();
                     WinWindow.hide();
                 }
             }
             else if (event.type == sf::Event::MouseButtonPressed) {
-                ShowWindow = true;
+
                 auto focusedWidget = gui.getFocusedChild();;
                 if (focusedWidget && focusedWidget->getWidgetType() == "MenuBarMenuPlaceholder") {
                     continue;
@@ -724,17 +749,15 @@ public:
             }
         }
 
-        if (ShowWindow) {
-            window.clear(sf::Color::White);
-            game.mapPrint(window);
-            window.draw(text);
-            window.draw(CountFlagText);
-            WinWindow.draw(window);
-            LoseWindow.draw(window);
-            gui.draw();
-            window.display();
-            ShowWindow = false;
-        }
+
+        window.clear(sf::Color::White);
+        window.draw(text);
+        window.draw(CountFlagText);
+        game.mapPrint(window);
+        WinWindow.draw(window);
+        LoseWindow.draw(window);
+        gui.draw();
+        window.display();
         sf::sleep(sf::milliseconds(16));
     }
     return 0;
